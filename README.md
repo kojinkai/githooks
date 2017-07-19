@@ -1,3 +1,3 @@
-###Git Hooks
+## Git Hooks
 
-A collection of example GitHooks for use in your projects
+A collection of example GitHooks for use in projects

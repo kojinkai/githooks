@@ -1,0 +1,17 @@
+
+firstLine=`head -2 $1 | tail -1`
+if [[ $firstLine == \#* ]]; then # Testing that the file starts with a comment, not yet a real commit ;)
+
+  BRANCH_NAME=$(git symbolic-ref --short HEAD)
+  PREFIX=`echo $BRANCH_NAME | sed -E -e "s|/.*||g" -e "s/ure//g"`
+  ISSUE=`echo $BRANCH_NAME | sed -E -e "s|.*/||g" -e "s/[a-z]//g" -e "s/([-])([-])//g"`
+
+  echo "$PREFIX(<module affected>): $ISSUE <terse description of changes>" > .prepare-commit-msg-temp
+  echo '' >> .prepare-commit-msg-temp
+  echo '# glossary of commit types: feat, fix, docs, style, refactor, test, chore' >> .prepare-commit-msg-temp
+  echo '# example message: fix(Invoice): ENG-123 Update postcode validation regexp' >> .prepare-commit-msg-temp
+
+  { cat .prepare-commit-msg-temp; cat $1; } > .prepare-commit-msg-temp2
+  cat .prepare-commit-msg-temp2 > $1
+  rm .prepare-commit-msg-temp .prepare-commit-msg-temp2
+fi
